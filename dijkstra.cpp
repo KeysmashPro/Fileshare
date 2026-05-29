@@ -24,8 +24,14 @@ struct idds {
   }
 };
 
+struct bus {
+  u64 idx;
+  u64 st;
+  u64 et;
+};
+
 // Better than BFS
-void dks(vector<vector<idds>>& v, vector<u64> g, u64 start) {
+i64 dks(vector<vector<bus>>& v, u64 start, u64 end) {
   vector<idds> vrtx(v.size(), {u64(-1), u64(-1)});
   priority_queue<idds, vector<idds>, greater<idds>> pq;
   
@@ -39,9 +45,14 @@ void dks(vector<vector<idds>>& v, vector<u64> g, u64 start) {
     pq.pop();
 
     if (c_dst > vrtx[c_idx].dst) continue;
+    if (c_idx == end) { return c_dst; }
     
     for (auto& e : v[c_idx]) {
-      u64 new_dst = c_dst + e.dst;
+      u64 new_dst = u64(-1);
+      if (c_dst <= e.st)
+        new_dst = e.et;
+      else
+        continue;
       if (new_dst < vrtx[e.idx].dst) {
         vrtx[e.idx].idx = c_idx;
         vrtx[e.idx].dst = new_dst;
@@ -49,43 +60,30 @@ void dks(vector<vector<idds>>& v, vector<u64> g, u64 start) {
       }
     }
   }
-  vector<idds> res;
-  for (auto& i : g) {
-    res.push_back({i, vrtx[i].dst});
-  }
-
-  sort(res.begin(), res.end());
-  for (auto& i : res) {
-    cout << i.idx + 1 << " " << i.dst << endl;
-  }
+  return -1;
 }
 
-vector<vector<idds>> input(u64 n, u64 m) {
-  vector<vector<idds>> adj(n);
+vector<vector<bus>> input(u64 n, u64 m) {
+  vector<vector<bus>> adj(n);
   for (u64 i = 0; i < m; ++i) {
-    u64 a, b, d;
-    cin >> a >> b >> d;
-    a--; b--;
-    adj[a].push_back({b, d});
-    adj[b].push_back({a, d});
+    u64 a, at, b, bt;
+    cin >> a >> at >> b >> bt;
+    a--;
+    b--;
+    adj[a].push_back({b, at, bt});
   }
   return adj;
 }
 
 int main() {
   ios::sync_with_stdio(false); cin.tie(nullptr);
-  u64  n, m, k, c;
-  cin >> n >> m >> k >> c;
-  c--;
+  u64  n, m, s, e;
+  cin >> n;
+  cin >> s >> e;
+  s--; e --;
+  cin >> m;
 
-  vector<u64> g(k);
-  for (int i = 0; i < k; ++i) {
-    cin >> g[i];
-    g[i]--;
-  }
-
-  vector<vector<idds>> graph = input(n, m);
-
-  dks(graph, g, c);
+  vector<vector<bus>> graph = input(n, m);
+  cout << dks(graph, s, e) << endl;
   return 0;
 }
