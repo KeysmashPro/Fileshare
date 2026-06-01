@@ -5,7 +5,6 @@
 
 #pragma GCC optimization("unroll-loops")
 #pragma GCC target("avx,avx2,fma")
-#pragma GCC optimize("Ofast")
 
 using namespace std;
 
@@ -76,12 +75,20 @@ vector<vector<bus>> input(u64 n, u64 m) {
 }
 
 int main() {
+<<<<<<< HEAD
   ios::sync_with_stdio(false); cin.tie(nullptr);
   u64  n, m, s, e;
   cin >> n;
   cin >> s >> e;
   s--; e --;
   cin >> m;
+=======
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+  u64  n, m, k, c;
+  cin >> n >> m >> k >> c;
+  c--;
+>>>>>>> 3e3da21 (-)
 
   vector<vector<bus>> graph = input(n, m);
   cout << dks(graph, s, e) << endl;
