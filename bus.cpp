@@ -40,8 +40,7 @@ i64 dks(vector<vector<bus>>& v, u64 start, u64 end, u64 t) {
     if (c_idx == end) return c_t;
 
     for (const auto& e : v[c_idx]) {
-      if (c_t % e.interval == 0) { new_t = c_t + e.duration; }
-      else { new_t = c_t - (c_t % e.interval) + e.interval + e.duration; }
+      new_t = c_t + e.duration + (e.interval - c_t % e.interval) % e.interval;
       if (new_t < vrtx[e.destanation].dst) {
         vrtx[e.destanation] = {c_idx, new_t};
         pq.push({e.destanation, new_t});
@@ -64,8 +63,8 @@ vector<vector<bus>> input(u64 n, u64 m) {
 }
 
 int main() {
-  //ios::sync_with_stdio(false);
-  //cin.tie(nullptr);
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
   u64 n, m, cp;
   cin >> n >> m;
   auto v = input(n, m);
